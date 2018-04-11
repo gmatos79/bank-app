@@ -1,2 +1,3 @@
 rootProject.name = 'bank-app'
+include 'bank-api'
 
