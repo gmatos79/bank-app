@@ -4,5 +4,5 @@ import doing.simplethings.bank.api.requestmodel.CreateAccountRequest;
 
 @FunctionalInterface
 public interface CreateAccount {
-    void execute(CreateAccountRequest request);
+    long execute(CreateAccountRequest request);
 }
