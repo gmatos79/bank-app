@@ -1,3 +1,5 @@
 rootProject.name = 'bank-app'
 include 'bank-api'
+include 'bank-domain'
+include 'bank-impl'
 
