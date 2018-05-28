@@ -2,6 +2,6 @@ package doing.simplethings.bank.domain.gateway;
 
 import doing.simplethings.bank.domain.entity.Account;
 
-public interface CreateAccountEntityGateway {
+public interface AccountEntityGateway {
     long save(Account account);
 }

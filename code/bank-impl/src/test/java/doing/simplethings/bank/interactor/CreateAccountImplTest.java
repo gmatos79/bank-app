@@ -5,7 +5,7 @@ import doing.simplethings.bank.api.requestmodel.CreateAccountRequest;
 import doing.simplethings.bank.api.responsemodel.CreateAccountResponse;
 import doing.simplethings.bank.api.responsemodel.OperationResponse;
 import doing.simplethings.bank.domain.entity.Account;
-import doing.simplethings.bank.domain.gateway.CreateAccountEntityGateway;
+import doing.simplethings.bank.domain.gateway.AccountEntityGateway;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,20 +20,20 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class CreateAccountImplTest {
-    private CreateAccountEntityGateway createAccountEntityGateway;
+    private AccountEntityGateway accountEntityGateway;
     private CreateAccount createAccount;
 
     @Before
     public void setup(){
-        this.createAccountEntityGateway = mock(CreateAccountEntityGateway.class);
-        this.createAccount = new CreateAccountImpl(this.createAccountEntityGateway);
+        this.accountEntityGateway = mock(AccountEntityGateway.class);
+        this.createAccount = new CreateAccountImpl(this.accountEntityGateway);
     }
 
     @Test
     public void shouldCreateAccount(){
         //Given
         CreateAccountRequest createAccountRequest = new CreateAccountRequest("John Doe", BigDecimal.TEN);
-        when(this.createAccountEntityGateway.save(any(Account.class))).thenReturn(Long.MAX_VALUE);
+        when(this.accountEntityGateway.save(any(Account.class))).thenReturn(Long.MAX_VALUE);
 
         //When
         OperationResponse<CreateAccountResponse> createAccountResponse =
@@ -46,7 +46,7 @@ public class CreateAccountImplTest {
         assertThat(createAccountResponse.getValue().getName()).isEqualTo(createAccountRequest.getName());
         assertThat(createAccountResponse.getValue().getBalance()).isEqualTo(createAccountRequest.getInitialBalance());
 
-        verify(this.createAccountEntityGateway, times(1)).save(any(Account.class));
+        verify(this.accountEntityGateway, times(1)).save(any(Account.class));
     }
 
     @Test
@@ -63,6 +63,6 @@ public class CreateAccountImplTest {
         assertThat(createAccountResponse.hasError()).isTrue();
         assertThat(createAccountResponse.getErrors()).containsOnly("The initial balance could not be negative");
 
-        verify(this.createAccountEntityGateway, never()).save(any(Account.class));
+        verify(this.accountEntityGateway, never()).save(any(Account.class));
     }
 }
