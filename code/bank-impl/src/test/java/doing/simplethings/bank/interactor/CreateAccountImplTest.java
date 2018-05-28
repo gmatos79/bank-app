@@ -2,6 +2,7 @@ package doing.simplethings.bank.interactor;
 
 import doing.simplethings.bank.api.boundary.CreateAccount;
 import doing.simplethings.bank.api.requestmodel.CreateAccountRequest;
+import doing.simplethings.bank.api.responsemodel.CreateAccountResponse;
 import doing.simplethings.bank.domain.entity.Account;
 import doing.simplethings.bank.domain.gateway.CreateAccountEntityGateway;
 import org.junit.Before;
@@ -33,10 +34,14 @@ public class CreateAccountImplTest {
         when(this.createAccountEntityGateway.save(any(Account.class))).thenReturn(Long.MAX_VALUE);
 
         //When
-        long accountId = this.createAccount.execute(createAccountRequest);
+        CreateAccountResponse createAccountResponse = this.createAccount.execute(createAccountRequest);
 
         //Then
+        assertThat(createAccountResponse).isNotNull();
+        assertThat(createAccountResponse.getId()).isEqualTo(Long.MAX_VALUE);
+        assertThat(createAccountResponse.getName()).isEqualTo(createAccountRequest.getName());
+        assertThat(createAccountResponse.getBalance()).isEqualTo(createAccountRequest.getInitialBalance());
+
         verify(this.createAccountEntityGateway, times(1)).save(any(Account.class));
-        assertThat(accountId).isEqualTo(Long.MAX_VALUE);
     }
 }

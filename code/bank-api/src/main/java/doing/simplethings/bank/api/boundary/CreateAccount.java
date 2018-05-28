@@ -1,8 +1,8 @@
 package doing.simplethings.bank.api.boundary;
 
 import doing.simplethings.bank.api.requestmodel.CreateAccountRequest;
+import doing.simplethings.bank.api.responsemodel.CreateAccountResponse;
 
-@FunctionalInterface
 public interface CreateAccount {
-    long execute(CreateAccountRequest request);
+    CreateAccountResponse execute(CreateAccountRequest request);
 }
