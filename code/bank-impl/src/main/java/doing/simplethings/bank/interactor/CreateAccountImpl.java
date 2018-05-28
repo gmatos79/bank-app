@@ -2,6 +2,7 @@ package doing.simplethings.bank.interactor;
 
 import doing.simplethings.bank.api.boundary.CreateAccount;
 import doing.simplethings.bank.api.requestmodel.CreateAccountRequest;
+import doing.simplethings.bank.domain.entity.Account;
 import doing.simplethings.bank.domain.gateway.CreateAccountEntityGateway;
 
 public class CreateAccountImpl implements CreateAccount {
@@ -13,6 +14,7 @@ public class CreateAccountImpl implements CreateAccount {
 
     @Override
     public long execute(CreateAccountRequest request) {
-        return -1;
+        return this.createAccountEntityGateway.save(
+                new Account(request.getName(), request.getInitialBalance()));
     }
 }

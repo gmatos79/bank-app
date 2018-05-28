@@ -11,10 +11,16 @@ public class Account {
     public Account() {
 
     }
-    
+
     public Account(long id, String name, BigDecimal balance) {
         super();
         this.id = id;
+        this.name = name;
+        this.balance = balance;
+    }
+
+    public Account(String name, BigDecimal balance) {
+        super();
         this.name = name;
         this.balance = balance;
     }
