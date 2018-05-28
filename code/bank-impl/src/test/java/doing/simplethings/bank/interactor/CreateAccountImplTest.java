@@ -3,6 +3,7 @@ package doing.simplethings.bank.interactor;
 import doing.simplethings.bank.api.boundary.CreateAccount;
 import doing.simplethings.bank.api.requestmodel.CreateAccountRequest;
 import doing.simplethings.bank.api.responsemodel.CreateAccountResponse;
+import doing.simplethings.bank.api.responsemodel.OperationResponse;
 import doing.simplethings.bank.domain.entity.Account;
 import doing.simplethings.bank.domain.gateway.CreateAccountEntityGateway;
 import org.junit.Before;
@@ -34,13 +35,15 @@ public class CreateAccountImplTest {
         when(this.createAccountEntityGateway.save(any(Account.class))).thenReturn(Long.MAX_VALUE);
 
         //When
-        CreateAccountResponse createAccountResponse = this.createAccount.execute(createAccountRequest);
+        OperationResponse<CreateAccountResponse> createAccountResponse =
+                this.createAccount.execute(createAccountRequest);
 
         //Then
         assertThat(createAccountResponse).isNotNull();
-        assertThat(createAccountResponse.getId()).isEqualTo(Long.MAX_VALUE);
-        assertThat(createAccountResponse.getName()).isEqualTo(createAccountRequest.getName());
-        assertThat(createAccountResponse.getBalance()).isEqualTo(createAccountRequest.getInitialBalance());
+        assertThat(createAccountResponse.hasError()).isFalse();
+        assertThat(createAccountResponse.getValue().getId()).isEqualTo(Long.MAX_VALUE);
+        assertThat(createAccountResponse.getValue().getName()).isEqualTo(createAccountRequest.getName());
+        assertThat(createAccountResponse.getValue().getBalance()).isEqualTo(createAccountRequest.getInitialBalance());
 
         verify(this.createAccountEntityGateway, times(1)).save(any(Account.class));
     }
