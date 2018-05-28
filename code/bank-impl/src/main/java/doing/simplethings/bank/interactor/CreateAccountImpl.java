@@ -19,17 +19,25 @@ public class CreateAccountImpl implements CreateAccount {
 
     @Override
     public OperationResponse<CreateAccountResponse> execute(CreateAccountRequest request) {
-        if (request.getInitialBalance().compareTo(BigDecimal.ZERO) == -1) {
-            return OperationResponse.withErrors(
+        OperationResponse<CreateAccountResponse> createAccountResponse;
+
+        if (hasNegativeBalance(request)) {
+            createAccountResponse = OperationResponse.withErrors(
                     Collections.singletonList("The initial balance could not be negative")
+            );
+        } else {
+            Account account = new Account(request.getName(), request.getInitialBalance());
+            long accountId = this.createAccountEntityGateway.save(account);
+
+            createAccountResponse = OperationResponse.withValue(
+                    new CreateAccountResponse(accountId, account.getName(), account.getBalance())
             );
         }
 
-        Account account = new Account(request.getName(), request.getInitialBalance());
-        long newId = this.createAccountEntityGateway.save(account);
+        return createAccountResponse;
+    }
 
-        return OperationResponse.withValue(
-                new CreateAccountResponse(newId, account.getName(), account.getBalance())
-        );
+    private boolean hasNegativeBalance(CreateAccountRequest request) {
+        return request.getInitialBalance().compareTo(BigDecimal.ZERO) == -1;
     }
 }
