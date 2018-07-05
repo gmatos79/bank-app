@@ -32,10 +32,10 @@ public class CreateAccountImplTest {
     @Test
     public void shouldCreateAccount(){
         //Given
-        CreateAccountRequest createAccountRequest = new CreateAccountRequest("John Doe", BigDecimal.TEN);
         when(this.accountEntityGateway.save(any(Account.class))).thenReturn(Long.MAX_VALUE);
 
         //When
+        CreateAccountRequest createAccountRequest = new CreateAccountRequest("John Doe", BigDecimal.TEN);
         OperationResponse<CreateAccountResponse> createAccountResponse =
                 this.createAccount.execute(createAccountRequest);
 
