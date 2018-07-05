@@ -9,7 +9,6 @@ import doing.simplethings.bank.domain.gateway.AccountEntityGateway;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class CreateAccountImpl implements CreateAccount {
