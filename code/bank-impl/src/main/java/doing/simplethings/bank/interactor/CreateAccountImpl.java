@@ -8,7 +8,9 @@ import doing.simplethings.bank.domain.entity.Account;
 import doing.simplethings.bank.domain.gateway.AccountEntityGateway;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class CreateAccountImpl implements CreateAccount {
     private final AccountEntityGateway accountEntityGateway;
@@ -21,23 +23,33 @@ public class CreateAccountImpl implements CreateAccount {
     public OperationResponse<CreateAccountResponse> execute(CreateAccountRequest request) {
         OperationResponse<CreateAccountResponse> createAccountResponse;
 
-        if (hasNegativeBalance(request)) {
-            createAccountResponse = OperationResponse.withErrors(
-                    Collections.singletonList("The initial balance could not be negative")
-            );
-        } else {
+        List<String> validationResult = this.validateRequestData(request);
+
+        if (validationResult.isEmpty()) {
             Account account = new Account(request.getName(), request.getInitialBalance());
             long accountId = this.accountEntityGateway.save(account);
 
             createAccountResponse = OperationResponse.withValue(
                     new CreateAccountResponse(accountId, account.getName(), account.getBalance())
             );
+        } else {
+            createAccountResponse = OperationResponse.withErrors(validationResult);
         }
 
         return createAccountResponse;
     }
 
-    private boolean hasNegativeBalance(CreateAccountRequest request) {
-        return request.getInitialBalance().compareTo(BigDecimal.ZERO) == -1;
+    private List<String> validateRequestData(CreateAccountRequest request) {
+        List<String> errors = new ArrayList<>();
+
+        if (request.getName() == null || request.getName().trim().equals("")) {
+            errors.add("The name could not be empty");
+        }
+
+        if (request.getInitialBalance().compareTo(BigDecimal.ZERO) == -1) {
+            errors.add("The initial balance could not be negative");
+        }
+
+        return errors;
     }
 }

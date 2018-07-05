@@ -65,4 +65,30 @@ public class CreateAccountImplTest {
 
         verify(this.accountEntityGateway, never()).save(any(Account.class));
     }
+
+    @Test
+    public void shouldReturnErrorWhenGivenEmptyName() {
+        this.shouldReturnErrorWhenGivenInvalidName("");
+    }
+
+    @Test
+    public void shouldReturnErrorWhenGivenNullName() {
+        this.shouldReturnErrorWhenGivenInvalidName(null);
+    }
+
+    private void shouldReturnErrorWhenGivenInvalidName(String name) {
+        //Given
+        CreateAccountRequest createAccountRequest = new CreateAccountRequest(name, BigDecimal.ONE);
+
+        //When
+        OperationResponse<CreateAccountResponse> createAccountResponse =
+                this.createAccount.execute(createAccountRequest);
+
+        //Then
+        assertThat(createAccountResponse).isNotNull();
+        assertThat(createAccountResponse.hasError()).isTrue();
+        assertThat(createAccountResponse.getErrors()).containsOnly("The name could not be empty");
+
+        verify(this.accountEntityGateway, never()).save(any(Account.class));
+    }
 }
